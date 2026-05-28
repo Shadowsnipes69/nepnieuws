@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Je Kennis: Nepnieuws Quiz</title>
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #e94560;
+      --bg-light: #f4f4f8;
+      --text-dark: #1a1a2e;
+      --text-light: #ffffff;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      background: radial-gradient(circle at top, #e9edf7 0%, #f4f4f8 40%, #fff 100%);
+      color: var(--text-dark);
+      padding: 24px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Oswald', sans-serif;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .quiz-container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+    }
+
+    .header-text {
+      margin-bottom: 24px;
+    }
+
+    .progress-wrapper {
+      margin-bottom: 24px;
+      background: #dde3f2;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 18px;
+    }
+
+    .progress-fill {
+      width: 10%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #f66b84);
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #4b4f65;
+    }
+
+    #question {
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+    }
+
+    #answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .answer-btn {
+      background: #f7f8fc;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 18px 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1rem;
+      color: var(--text-dark);
+      box-shadow: inset 0 0 0 rgba(0,0,0,0.05);
+    }
+
+    .answer-btn:hover:not(.selected) {
+      transform: translateY(-2px);
+      background: #eef1fb;
+    }
+
+    .answer-btn.correct {
+      border-color: #3bb54a;
+      background: #e6f9ea;
+      color: #134d28;
+    }
+
+    .answer-btn.wrong {
+      border-color: #d92f37;
+      background: #fee8e9;
+      color: #811e24;
+    }
+
+    .answer-btn.selected {
+      pointer-events: none;
+    }
+
+    #explanation {
+      margin-top: 16px;
+      padding: 18px 20px;
+      background: #f6f6ff;
+      border-radius: 12px;
+      border: 1px solid #dfe2f5;
+      display: none;
+      color: #2e3262;
+    }
+
+    #nextBtn, #restartBtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--accent);
+      color: var(--text-light);
+      border-radius: 10px;
+      padding: 14px 22px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+
+    #nextBtn:hover, #restartBtn:hover {
+      transform: translateY(-1px);
+      background: #ff557e;
+    }
+
+    #resultScreen {
+      display: none;
+      text-align: center;
+    }
+
+    .result-card {
+      background: #f8fbff;
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .result-score {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+
+    .result-message {
+      color: #3c4061;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes countUp {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+
+      .quiz-container {
+        padding: 24px;
+      }
+
+      #answers {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .quiz-container {
+        padding: 20px;
+      }
+
+      #question {
+        font-size: 1.2rem;
+      }
+
+      .answer-btn {
+        padding: 16px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="header-text">
+      <h1>Test Je Kennis: Nepnieuws Quiz</h1>
+      <p>Kun jij nepnieuws herkennen? Beantwoord de 10 vragen en ontdek jouw score!</p>
+    </div>
+
+    <div class="progress-wrapper">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">Vraag 1 van 10</div>
+
+    <div id="quizContent">
+      <div id="question"></div>
+      <div id="answers"></div>
+      <div id="explanation"></div>
+      <button id="nextBtn" style="display:none">Volgende vraag →</button>
+    </div>
+
+    <div id="resultScreen">
+      <div class="result-card">
+        <h2 class="result-score" id="resultScore"></h2>
+        <p class="result-message" id="resultMessage"></p>
+        <button id="restartBtn">Opnieuw spelen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Een nieuwsartikel beweert dat een bekende politicus heeft gezegd dat alle scholen sluiten. Er is geen video of officiële bevestiging. Wat doe je?",
+        answers: [
+          "Het artikel direct delen op social media",
+          "Zoeken naar bevestiging bij andere betrouwbare nieuwsbronnen",
+          "Het geloven omdat het op een nieuwssite staat",
+          "De politicus een bericht sturen"
+        ],
+        correct: 1,
+        explanation: "Controleer altijd of meerdere betrouwbare bronnen hetzelfde melden. Eén bron is nooit genoeg bewijs."
+      },
+      {
+        question: "Wat is een 'deepfake'?",
+        answers: [
+          "Een artikel dat opzettelijk moeilijk te begrijpen is geschreven",
+          "Een nep-website die eruitziet als een echte nieuwssite",
+          "Een AI-gegenereerde video of foto waarbij gezichten of stemmen zijn vervangen",
+          "Een valse statistiek in een nieuwsartikel"
+        ],
+        correct: 2,
+        explanation: "Deepfakes gebruiken AI om gezichten of stemmen realistisch te vervangen. Ze worden steeds moeilijker te herkennen."
+      },
+      {
+        question: "Hoe snel verspreidt nepnieuws zich op sociale media vergeleken met echt nieuws?",
+        answers: [
+          "Twee keer zo snel",
+          "Even snel",
+          "Langzamer, want mensen zijn voorzichtiger",
+          "Zes keer zo snel"
+        ],
+        correct: 3,
+        explanation: "Onderzoek van MIT toonde aan dat nepnieuws 6x sneller verspreidt dan echte berichten, omdat het emotionele reacties opwekt."
+      },
+      {
+        question: "Je ziet een schokkende foto op Twitter met de tekst: 'Kijk wat er gisteren in Amsterdam is gebeurd!' De foto heeft geen bronvermelding. Wat is het meest waarschijnlijke probleem?",
+        answers: [
+          "De foto is bewerkt met Photoshop",
+          "De foto kan echt zijn maar in een verkeerde context zijn geplaatst",
+          "De foto is altijd nep als er geen bron bij staat",
+          "Er is niets mis, want foto's liegen niet"
+        ],
+        correct: 1,
+        explanation: "Echte foto's worden vaak in een andere context geplaatst. Dit heet 'misleidende context' en is een veelvoorkomende vorm van nepnieuws."
+      },
+      {
+        question: "Welke van de volgende websites is een betrouwbare fact-checker?",
+        answers: [
+          "WorldTruthTV.org",
+          "NaturalNews.com",
+          "Snopes.com",
+          "InfoWars.com"
+        ],
+        correct: 2,
+        explanation: "Snopes.com is een van de oudste en meest gerespecteerde fact-checking sites ter wereld. De andere sites staan bekend als onbetrouwbare bronnen."
+      },
+      {
+        question: "Wat is het verschil tussen 'misinformatie' en 'desinformatie'?",
+        answers: [
+          "Er is geen verschil, het zijn synoniemen",
+          "Misinformatie is per ongeluk verspreid, desinformatie is bewust misleidend",
+          "Desinformatie komt alleen voor op internet, misinformatie in kranten",
+          "Misinformatie is gevaarlijker dan desinformatie"
+        ],
+        correct: 1,
+        explanation: "Misinformatie = onbedoeld onjuist. Desinformatie = bewust misleidend met een agenda. Beide zijn schadelijk, maar desinformatie is opzettelijk."
+      },
+      {
+        question: "Een YouTube-video heeft 5 miljoen views en beweert dat 5G-masten corona veroorzaken. Wat zegt dit aantal views over de betrouwbaarheid?",
+        answers: [
+          "Veel views betekent dat het waarschijnlijk klopt",
+          "Het aantal views zegt niets over de betrouwbaarheid van de informatie",
+          "Populaire video's worden altijd gecheckt door YouTube",
+          "5 miljoen views betekent dat experts het hebben goedgekeurd"
+        ],
+        correct: 1,
+        explanation: "Populariteit is geen bewijs van waarheid. Nepnieuws kan viraal gaan juist OMDAT het schokkend of emotioneel is."
+      },
+      {
+        question: "Wat is een 'bot' in de context van sociale media en nepnieuws?",
+        answers: [
+          "Een menselijke medewerker die betaald wordt om nepnieuws te verspreiden",
+          "Een AI-gestuurde nep-account die automatisch content liket, deelt en verspreidt",
+          "Een speciaal programma dat nepnieuws detecteert en verwijdert",
+          "Een chatbot die vragen beantwoordt over het nieuws"
+        ],
+        correct: 1,
+        explanation: "Bots zijn geautomatiseerde accounts die massaal content kunnen verspreiden. Ze worden ingezet om nepnieuws viraal te laten lijken."
+      },
+      {
+        question: "Welk kenmerk is een WAARSCHUWINGSSIGNAAL dat een artikel nepnieuws kan zijn?",
+        answers: [
+          "Het artikel heeft een auteursnaam vermeld",
+          "Het artikel is gepubliceerd op een bekende krant",
+          "De kop gebruikt HOOFDLETTERS en uitroeptekens om extreme emotie op te wekken",
+          "Het artikel bevat links naar andere bronnen"
+        ],
+        correct: 2,
+        explanation: "Sensationele koppen met HOOFDLETTERS, uitroeptekens en extreme emotionele taal zijn klassieke kenmerken van clickbait en nepnieuws."
+      },
+      {
+        question: "Wat deed filmmaker Jordan Peele in 2018 om mensen te waarschuwen voor deepfakes?",
+        answers: [
+          "Hij maakte een documentaire over nepnieuws",
+          "Hij schreef een open brief aan de Amerikaanse regering",
+          "Hij maakte een deepfake-video van Barack Obama om de gevaren te demonstreren",
+          "Hij ontwikkelde een app om deepfakes te detecteren"
+        ],
+        correct: 2,
+        explanation: "Peele maakte een realistische deepfake van Obama, waarbij Obama zei: 'We zitten in een gevaarlijke tijd.' Het was een krachtige waarschuwing over AI-manipulatie."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let userAnswers = [];
+    let shuffledQuestions = [];
+
+    const questionElement = document.getElementById('question');
+    const answersElement = document.getElementById('answers');
+    const explanationElement = document.getElementById('explanation');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const resultScreen = document.getElementById('resultScreen');
+    const resultScore = document.getElementById('resultScore');
+    const resultMessage = document.getElementById('resultMessage');
+    const restartBtn = document.getElementById('restartBtn');
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function updateProgress() {
+      const progress = ((currentQuestion + 1) / questions.length) * 100;
+      progressFill.style.width = `${progress}%`;
+      progressText.textContent = `Vraag ${currentQuestion + 1} van ${questions.length}`;
+    }
+
+    function fillAnswers() {
+      answersElement.innerHTML = '';
+      const current = shuffledQuestions[currentQuestion];
+      current.answers.forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.className = 'answer-btn';
+        button.type = 'button';
+        button.dataset.index = index;
+        button.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${answer}`;
+        button.addEventListener('click', selectAnswer);
+        answersElement.appendChild(button);
+      });
+    }
+
+    function loadQuestion() {
+      const current = shuffledQuestions[currentQuestion];
+      questionElement.textContent = current.question;
+      fillAnswers();
+      explanationElement.style.display = 'none';
+      explanationElement.textContent = '';
+      nextBtn.style.display = 'none';
+      updateProgress();
+    }
+
+    function selectAnswer(event) {
+      const selectedButton = event.currentTarget;
+      const answerIndex = Number(selectedButton.dataset.index);
+      const current = shuffledQuestions[currentQuestion];
+      const buttons = Array.from(answersElement.children);
+
+      buttons.forEach((button, index) => {
+        button.classList.add('selected');
+        if (index === current.correct) {
+          button.classList.add('correct');
+        }
+        if (index === answerIndex && index !== current.correct) {
+          button.classList.add('wrong');
+        }
+      });
+
+      const isCorrect = answerIndex === current.correct;
+      if (isCorrect) {
+        score += 1;
+      }
+
+      userAnswers.push({
+        question: current.question,
+        selected: answerIndex,
+        correct: current.correct
+      });
+
+      explanationElement.textContent = current.explanation;
+      explanationElement.style.display = 'block';
+      nextBtn.style.display = 'inline-flex';
+    }
+
+    function getResultMessage() {
+      if (score <= 3) {
+        return 'Je hebt nog veel te leren. Lees onze uitlegpagina\'s over nepnieuws en AI!';
+      }
+      if (score <= 6) {
+        return 'Niet slecht! Je kent de basis, maar er is nog ruimte voor verbetering.';
+      }
+      if (score <= 8) {
+        return 'Goed gedaan! Je bent al best mediawijs.';
+      }
+      return 'Uitstekend! Jij bent een echte nepnieuws-detective! 🕵️';
+    }
+
+    function showResult() {
+      document.getElementById('quizContent').style.display = 'none';
+      resultScreen.style.display = 'block';
+      resultScore.textContent = `Je scoorde ${score} van ${questions.length}!`;
+      resultMessage.textContent = getResultMessage();
+    }
+
+    nextBtn.addEventListener('click', () => {
+      currentQuestion += 1;
+      if (currentQuestion >= shuffledQuestions.length) {
+        showResult();
+        return;
+      }
+      loadQuestion();
+    });
+
+    restartBtn.addEventListener('click', startQuiz);
+
+    function startQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      userAnswers = [];
+      shuffledQuestions = shuffle(questions);
+      document.getElementById('quizContent').style.display = 'block';
+      resultScreen.style.display = 'none';
+      loadQuestion();
+    }
+
+    startQuiz();
+  </script>
+</body>
+</html>
