@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <title>Nepnieuws - Diepgaande uitleg</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="hero">
+    <h1>Wat is Nepnieuws?</h1>
+    <p>Een diepgaande uitleg over soorten, oorzaken en gevolgen.</p>
+  </section>
+
+  <section class="section">
+    <h2>Definitie van Nepnieuws</h2>
+    <p>Nepnieuws (ook wel 'misinformatie' of 'desinformatie' genoemd) verwijst naar valse of misleidende informatie die wordt gepresenteerd als betrouwbaar nieuws. Het verschil tussen misinformatie en desinformatie is belangrijk: misinformatie wordt per ongeluk verspreid zonder kwade opzet, terwijl desinformatie bewust wordt gecreëerd om te misleiden.</p>
+  </section>
+
+  <section class="section">
+    <h2>Soorten Nepnieuws</h2>
+    <div class="cards-grid">
+      <article class="card">
+        <h3>Clickbait</h3>
+        <p style="color: black;">Sensationele koppen die overdrijven of beloven wat het artikel niet waarmaakt, puur om klikken te genereren.</p>
+      </article>
+      <article class="card">
+        <h3>Propaganda</h3>
+        <p>Nieuws dat bewust wordt vervormd om een politiek of ideologisch standpunt te bevorderen.</p>
+      </article>
+      <article class="card">
+        <h3>Satire</h3>
+        <p style="color: black;">Nep-nieuws bedoeld als humor of kritiek, maar dat soms als echt wordt beschouwd.</p>
+      </article>
+      <article class="card">
+        <h3>Deepfakes</h3>
+        <p>AI-gegenereerde video's of foto's waarbij iemands gezicht of stem wordt vervangen door iemand anders.</p>
+      </article>
+      <article class="card">
+        <h3>Misleidende Context</h3>
+        <p style="color: black;">Echte foto's of video's die worden geplaatst in een verkeerde context om een vals verhaal te vertellen.</p>
+      </article>
+      <article class="card">
+        <h3>Nepstatistieken</h3>
+        <p>Verzonnen of uit context gehaalde cijfers en statistieken die een vals beeld schetsen.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Wat zijn de gevolgen?</h2>
+    <div class="consequences">
+      <article class="consequence">
+        <img src="politieke schade.png" alt="Politieke schade" class="consequence-logo">
+        <h3>Politieke schade</h3>
+        <p>Nepnieuws kan verkiezingen beïnvloeden en het vertrouwen in democratie ondermijnen.</p>
+      </article>
+      <article class="consequence">
+        <img src="gezondheid.jpg" alt="Gezondheidschade" class="consequence-logo">
+        <h3>Gezondheidschade</h3>
+        <p>Tijdens COVID-19 stierven mensen doordat ze nepnieuws geloofden over gevaarlijke 'geneesmiddelen'.</p>
+      </article>
+      <article class="consequence">
+        <img src="sociale schade.png" alt="Sociale schade" class="consequence-logo">
+        <h3>Sociale schade</h3>
+        <p>Nepnieuws vergroot polarisatie en wantrouwen tussen bevolkingsgroepen.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Diepgaande Voorbeelden</h2>
+    <div class="examples">
+      <article class="example-card">
+        <h3>De 'Plandemic' Documentaire (2020)</h3>
+        <p>In mei 2020 verscheen een video genaamd Plandemic op sociale media. De video bevatte een interview met een voormalig wetenschapper die ongefundeerde claims maakte over COVID-19 en vaccins. Binnen enkele dagen was de video meer dan 8 miljoen keer bekeken. Platforms als YouTube, Facebook en Vimeo verwijderden de video wegens het verspreiden van gevaarlijke medische desinformatie. Dit voorbeeld toont hoe snel nepnieuws zich verspreidt en hoe moeilijk het is te stoppen.</p>
+      </article>
+      <article class="example-card">
+        <h3>Nepaanval in Syrië (2018)</h3>
+        <p>Na een vermeende chemische aanval in Douma, Syrië, circuleerden online tientallen tegenstrijdige verhalen. Sommige beweerden dat de aanval nep was of geënsceneerd. Onderzoeksjournalisten van Bellingcat wisten via open-source intelligence (foto's, video's, satellietbeelden) te bewijzen dat de aanval echt had plaatsgevonden. Dit voorbeeld laat zien hoe nepnieuws ook in oorlogssituaties levens kan kosten.</p>
+      </article>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const steps = document.querySelectorAll(".timeline-step");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.16 });
+        steps.forEach((step) => observer.observe(step));
+      } else {
+        steps.forEach((step) => step.classList.add("visible"));
+      }
+    });
+  </script>
+</body>
+</html>
