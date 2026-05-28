@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Herken Jij Nepnieuws?</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark-theme">
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Herken Jij Nepnieuws?</h1>
+        <p>Ontdek hoe nepnieuws werkt, hoe AI het maakt én hoe jij het herkent.</p>
+        <div class="hero-buttons">
+          <a class="cta-primary" href="quiz.html">Start de Quiz →</a>
+          <a class="cta-secondary" href="#intro">Lees Meer ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="intro">
+      <div class="intro-grid">
+        <article class="card">
+          <h3>Wat is Nepnieuws?</h3>
+          <p>Nepnieuws is bewust verspreide onjuiste informatie die eruitziet als echt nieuws. Het doel is mensen te misleiden, angst te zaaien of meningen te beïnvloeden.</p>
+        </article>
+        <article class="card">
+          <h3>Hoe gebruikt AI het?</h3>
+          <p>Kunstmatige intelligentie kan in seconden duizenden nep-artikelen schrijven. Deepfakes, nep-foto's en gemanipuleerde video's zijn steeds moeilijker te onderscheiden van echt.</p>
+        </article>
+        <article class="card">
+          <h3>Hoe herken je het?</h3>
+          <p>Check altijd de bron, zoek naar andere berichtgeving over hetzelfde onderwerp, en wees kritisch op emotionele of schokkende koppen.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat">
+          <strong data-target="68">0%</strong>
+          <span>van mensen heeft ooit nepnieuws geloofd</span>
+        </div>
+        <div class="stat">
+          <strong data-target="6">0x</strong>
+          <span>sneller verspreidt nepnieuws dan echt nieuws</span>
+        </div>
+        <div class="stat">
+          <strong data-target="2030">0</strong>
+          <span>jaar waarop deepfakes niet meer te onderscheiden zijn</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="examples">
+      <h2>Bekende Voorbeelden van Nepnieuws</h2>
+      <div class="example-list">
+        <div class="example-card">
+          <div class="example-image">Pizzagate (2016)</div>
+          <div class="example-content">
+            <h3>Pizzagate (2016)</h3>
+            <p>Een volledig verzonnen complottheorie beweerde dat een pizzeria in Washington D.C. een geheim netwerk verborg. Het nieuws verspreidde zich razendsnel via sociale media en leidde zelfs tot geweld.</p>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-image">COVID-19 Vaccin Microchips</div>
+          <div class="example-content">
+            <h3>COVID-19 Vaccin Microchips</h3>
+            <p>Miljoenen mensen geloofden dat vaccins microchips bevatten. Dit werd aangewakkerd door viral video's en berichten op sociale media, ondanks wetenschappelijk bewijs van het tegendeel.</p>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-image">Nep-Obama Video (Deepfake)</div>
+          <div class="example-content">
+            <h3>Nep-Obama Video (Deepfake)</h3>
+            <p>In 2018 maakte filmmaker Jordan Peele een deepfake-video van Barack Obama om te waarschuwen voor de gevaren van AI-gegenereerde video's. Het was bijna niet van echt te onderscheiden.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tips">
+      <h2>5 Tips om Nepnieuws te Herkennen</h2>
+      <div class="tip-list">
+        <div class="tip-card">
+          <div class="tip-number">1</div>
+          <div class="tip-content">
+            <h4>Controleer de bron</h4>
+            <p>Is het een bekende, betrouwbare nieuwssite?</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-number">2</div>
+          <div class="tip-content">
+            <h4>Zoek bevestiging</h4>
+            <p>Berichten andere media hetzelfde?</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-number">3</div>
+          <div class="tip-content">
+            <h4>Check de datum</h4>
+            <p>Is het nieuws actueel of oud?</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-number">4</div>
+          <div class="tip-content">
+            <h4>Bekijk de URL</h4>
+            <p>Ziet het webadres er vreemd uit?</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-number">5</div>
+          <div class="tip-content">
+            <h4>Gebruik fact-checkers</h4>
+            <p>Sites als Snopes.com of Nieuwscheckers.nl</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function animateStats(entries, observer) {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const stat = entry.target;
+        const targetValue = parseInt(stat.dataset.target, 10);
+        const suffix = stat.textContent.trim().endsWith('x') ? 'x' : '';
+        let current = 0;
+        const increment = Math.max(1, Math.floor(targetValue / 80));
+        const step = () => {
+          current += increment;
+          if (current >= targetValue) {
+            stat.textContent = targetValue + (stat.dataset.target === '6' ? 'x' : '');
+            return;
+          }
+          stat.textContent = current + (stat.dataset.target === '6' ? 'x' : '');
+          requestAnimationFrame(step);
+        };
+        step();
+        observer.unobserve(stat);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const stats = document.querySelectorAll('.stat strong');
+      const observer = new IntersectionObserver(animateStats, {
+        threshold: 0.4,
+      });
+      stats.forEach(stat => observer.observe(stat));
+    });
+  </script>
+</body>
+</html>
