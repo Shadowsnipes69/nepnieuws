@@ -6,7 +6,49 @@
   <title>Herken Jij Nepnieuws?</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="dark-theme">
+<body>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="navbar-left">
+      <a href="index.html" class="navbar-logo">
+        <img src="/logoantinepnieuws.jpg" alt="NepNieuws.nl Logo" />
+        <span class="navbar-logo-text">NepNieuws.nl</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="nepnieuws.html">Nepnieuws</a></li>
+        <li><a href="aiuitleg.html">AI-Uitleg</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </div>
+    <div class="navbar-right">
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput" 
+          placeholder="Zoeken..."
+        />
+        <button class="search-btn" id="searchBtn">🔍</button>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle" title="Dark mode aan/uit">🌙</button>
+      <button class="hamburger-menu" id="hamburgerMenu">☰</button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="nepnieuws.html">Nepnieuws</a>
+    <a href="aiuitleg.html">AI-Uitleg</a>
+    <a href="chatbot.html">Chatbot</a>
+    <a href="quiz.html">Quiz</a>
+  </div>
+
+  <!-- SEARCH RESULTS CONTAINER -->
+  <div class="search-results-container" id="searchResults"></div>
+
   <main>
     <section class="hero">
       <div class="hero-inner">
@@ -121,6 +163,138 @@
       </div>
     </section>
   </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Snelle Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="nepnieuws.html">Wat is Nepnieuws?</a></li>
+          <li><a href="aiuitleg.html">AI-Uitleg</a></li>
+          <li><a href="chatbot.html">Chatbot</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Over Ons</h4>
+        <p>NepNieuws.nl is een educatief platform dat mensen helpt nepnieuws te herkennen en begrijpen hoe AI dit fenomeen beïnvloedt.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 NepNieuws.nl | Kyani wolff & Davud Varešlija</p>
+    </div>
+  </footer>
+
+  <script>
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const htmlElement = document.documentElement;
+
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'enabled') {
+      htmlElement.classList.add('dark-mode');
+      darkModeToggle.textContent = '☀️';
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+      if (htmlElement.classList.contains('dark-mode')) {
+        htmlElement.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+        darkModeToggle.textContent = '🌙';
+      } else {
+        htmlElement.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+        darkModeToggle.textContent = '☀️';
+      }
+    });
+
+    // Hamburger Menu
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+
+    hamburgerMenu.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+      });
+    });
+
+    // Search Functionality
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchResults = document.getElementById('searchResults');
+
+    function highlightText(element, searchTerm) {
+      if (!searchTerm) return;
+      const regex = new RegExp(`(${searchTerm})`, 'gi');
+      element.innerHTML = element.innerHTML.replace(regex, '<mark>$1</mark>');
+    }
+
+    function removeHighlight() {
+      document.querySelectorAll('mark').forEach(mark => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+      });
+    }
+
+    function search() {
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      removeHighlight();
+      searchResults.innerHTML = '';
+
+      if (!searchTerm) {
+        searchResults.classList.remove('active');
+        return;
+      }
+
+      const elements = document.querySelectorAll('p, h1, h2, h3, li');
+      let found = false;
+
+      elements.forEach(element => {
+        if (element.textContent.toLowerCase().includes(searchTerm)) {
+          highlightText(element, searchTerm);
+          found = true;
+        }
+      });
+
+      if (!found) {
+        searchResults.innerHTML = `<div class="search-result-item">Geen resultaten gevonden voor: "${searchTerm}"</div>`;
+      }
+      searchResults.classList.add('active');
+    }
+
+    searchBtn.addEventListener('click', search);
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') search();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      if (!e.target.value) {
+        removeHighlight();
+        searchResults.classList.remove('active');
+      }
+    });
+
+    // Set active nav link
+    document.addEventListener('DOMContentLoaded', () => {
+      const navLinks = document.querySelectorAll('.nav-links a');
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    });
+  </script>
 
   <script>
     function animateStats(entries, observer) {
